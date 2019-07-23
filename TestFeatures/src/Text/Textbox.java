@@ -4,10 +4,12 @@ package Text;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
 import Application.Settings;
+import Conversation.ConversationNode;
 
 public class Textbox {
 
@@ -22,8 +24,14 @@ public class Textbox {
 		this.textArray=textArray;
 	}
 	
-	public void update() {
+	public ConversationNode update(KeyEvent e, ConversationNode conversation) {	
+		if(Character.getNumericValue(e.getKeyChar())>0 && Character.getNumericValue(e.getKeyChar())<=textArray.size()-1) {
+			index=Character.getNumericValue(e.getKeyChar());
+			System.out.println(conversation.getChildren().get(index-1).getData().getText().get(0));
+			return conversation.getChildren().get(index-1);
+		}
 		
+		return null;
 	}
 	
 	public void draw(Graphics g) {
@@ -33,8 +41,9 @@ public class Textbox {
 			
 			g.setColor(Color.WHITE);
 			g.setFont(new Font("TimesRoman", Font.PLAIN, 36));
-			for(int i=0; i<textArray.get(index).text.size(); i++) {
-				g.drawString(textArray.get(index).text.get(i), 150, Settings.getScreensize().height-350+i*30);
+			g.drawString(textArray.get(index).text.get(0), 150, Settings.getScreensize().height-350);
+			for(int i=1; i<textArray.get(index).text.size(); i++) {
+				g.drawString(i+": "+textArray.get(index).text.get(i), 150, Settings.getScreensize().height-350+i*45);
 			}
 		}
 	}

@@ -14,7 +14,7 @@ import Text.Textbox;
 
 public class TextFeatures extends Panel implements KeyListener{
 
-	Textbox textbox = new Textbox(null);
+	Textbox textbox = null;
 	ConversationNode conversation;
 	
 	@Override
@@ -30,7 +30,9 @@ public class TextFeatures extends Panel implements KeyListener{
 		/*conversation=ConversationParser.ConversationParser("src/Application/test.txt");
 		ConversationNode.printList(conversation);
 		System.exit(0);*/
-		textbox = new Textbox(ConversationParser.getCurrentConversationText(conversation));
+		if(textbox==null)
+			textbox = new Textbox(ConversationParser.getCurrentConversationText(conversation));
+		repaint();
 	}
 	
 	@Override
@@ -44,8 +46,14 @@ public class TextFeatures extends Panel implements KeyListener{
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		if(e.getKeyCode()==KeyEvent.VK_SPACE && textbox.isActive()) {
-			textbox.update();
+
+		if(textbox.isActive()) {
+			if(e.getKeyCode()==KeyEvent.VK_ESCAPE)
+				textbox.setActive(false);
+			else {
+				conversation = textbox.update(e, conversation);
+				textbox = new Textbox(ConversationParser.getCurrentConversationText(conversation));
+			}
 		}
 	}
 
